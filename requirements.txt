@@ -1,0 +1,8 @@
+requests  
+pandas  
+numpy  
+ccxt  # For connecting to crypto exchanges  
+loguru  # For logging  
+pytest  # For testing  
+python-dotenv  # For managing environment variables  
+python-telegram-bot  # For sending messages to Telegram

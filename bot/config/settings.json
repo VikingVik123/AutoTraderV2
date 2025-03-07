@@ -1,0 +1,24 @@
+{
+    "exchange": {
+        "name": "binance",
+        "key": "your-api-key",
+        "secret": "api_secret"
+    },
+    "pairs": [
+        "BTCUSDT:USDT",
+        "XRPBTC:USDT"
+    ],
+    "risk": {
+        "max_open_trades": 1
+    },
+    "manage": {
+        "stop_loss": 0.02,
+        "take_profit": 0.02
+    },
+    "comm": {
+        "telegram": {
+            "token": "your-telegram-token",
+            "chat_id": "your-telegram-chat-id"
+        }
+    }
+}
