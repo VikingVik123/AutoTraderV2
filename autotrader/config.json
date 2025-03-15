@@ -1,0 +1,10 @@
+{
+    "exchange": {
+        "name": "binance",
+        "key": "your-api",
+        "secret": "your-secret"
+    },
+
+    "timeframe": "1m",
+    "symbol": "BTCUSDT"
+}
