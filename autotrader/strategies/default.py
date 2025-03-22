@@ -1,4 +1,4 @@
-from autotrader.dataframes.data import dataframe
+from autotrader.dataframes.data import Price2DataFrame
 from autotrader.indicators.technical import Technical_Indicators
 
 class DefaultStrategy:
@@ -6,7 +6,7 @@ class DefaultStrategy:
     default trading strategy
     """
     def __init__(self):
-        self.data = dataframe
+        self.data = Price2DataFrame().to_dataframe()
         self.indicators = Technical_Indicators()
 
     def long_signal(self):

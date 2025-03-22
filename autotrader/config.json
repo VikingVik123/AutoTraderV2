@@ -6,5 +6,10 @@
     },
 
     "timeframe": "1m",
-    "symbol": "BTCUSDT"
+    "symbol": "BTCUSDT",
+    
+    "telegram": {
+        "token": "7332365891:AAH8JITVcgx9M5tPZWC62iGObRBaEbX_OmE",
+        "chatId": "1285226554"
+    }
 }

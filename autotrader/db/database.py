@@ -1,31 +1,28 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
 Base = declarative_base()
+# Load environment variables
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
+# Create the database engine
+engine = create_engine(DATABASE_URL, echo=True)
+
+# Session Factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Database:
     def __init__(self):
-        self.engine = create_engine(os.getenv("DATABASE_URL"), echo=False)
-        self.Session = sessionmaker(bind=self.engine)
-        self.session = self.Session()
-        Base.metadata.create_all(self.engine)
+        self.engine = engine
+        self.create_tables()  # Ensure tables are created
 
     def create_tables(self):
-        """
-        Create tables based on ORM models
-        """
+        """Create tables based on ORM models"""
+        from autotrader.models.symbol import Symbol
         Base.metadata.create_all(self.engine)
 
-    def get_session(self):
-        """
-        Return the session object
-        """
-        return self.session
-    
+# Create an instance of Database
 db = Database()

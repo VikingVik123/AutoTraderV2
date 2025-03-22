@@ -1,19 +1,20 @@
-from autotrader.models.symbol import Symbol
 import pandas as pd
-from autotrader.db.database import db
-session = db.get_session()
-
+from autotrader.db.database import SessionLocal
+from autotrader.models.symbol import Symbol  # ✅ Import Symbol model
 
 class Price2DataFrame:
     def __init__(self):
-        self.prices = session.query(Symbol).all()
+        """Initialize and fetch all price data from the database."""
+        session = SessionLocal()
+        self.prices = session.query(Symbol).all()  # ✅ Specify table
+        session.close()  # ✅ Close session after fetching data
 
     def to_dataframe(self):
         """
-        Converts the prices to a pandas dataframe
+        Converts the prices to a pandas dataframe.
         """
         if not self.prices:
-            pd.DataFrame()
+            return pd.DataFrame()
 
         data = {
             "datetime": [price.datetime for price in self.prices],
@@ -21,13 +22,7 @@ class Price2DataFrame:
             "high": [price.high for price in self.prices],
             "low": [price.low for price in self.prices],
             "close": [price.close for price in self.prices],
-            "volume": [price.volume for price in self.prices]
+            "volume": [price.volume for price in self.prices],
         }
-        dataframe = pd.DataFrame(data)
-        session.close()
-        return dataframe
-    
-dataframe = Price2DataFrame().to_dataframe()
-# Function to get DataFrame
-#def get_price_dataframe():
-#    return Price2DataFrame().to_dataframe()
+        return pd.DataFrame(data)
+

@@ -1,8 +1,9 @@
 from autotrader.models.symbol import Symbol
 from autotrader.exchanges.exchange import exch
+from autotrader.db.database import SessionLocal
 import json
 import os
-import datetime
+from datetime import datetime
 
 # Get the path to config.json (correcting the location)
 config_path = os.path.join(os.path.dirname(__file__), "..", "config.json")
@@ -18,6 +19,7 @@ symbol = config["symbol"]
 class Fetch_price:
     def __init__(self):
         self.exchange = exch.set_binance()
+        self.session = SessionLocal()
 
     def fetch_price(self):
         """
@@ -41,5 +43,8 @@ class Fetch_price:
                 low=price[3],
                 close=price[4],
                 volume=price[5]
-                )
-            ohlcv.save()
+            )
+            self.session.add(ohlcv)
+        self.session.flush()
+        self.session.commit()
+        self.session.close()

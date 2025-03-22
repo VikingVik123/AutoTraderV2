@@ -2,8 +2,10 @@ import os
 import json
 import requests
 from autotrader.exchanges.exchange import exch
-from autotrader.models.symbol import Symbol
 from datetime import datetime
+from autotrader.db.database import SessionLocal
+from autotrader.models.symbol import Symbol
+
 
 # Get the path to config.json (correcting the location)
 config_path = os.path.join(os.path.dirname(__file__), "..", "config.json")
@@ -20,7 +22,7 @@ symbol = config["symbol"]
 class Get_history:
     def __init__(self):
         self.exchange = exch.set_binance()
-
+        self.session = SessionLocal()
     def get_history(self):
         """
         Gets the last 200 candles from the exchange.
@@ -38,6 +40,7 @@ class Get_history:
         Saves the historical data to the database.
         """
         hist_prices = self.get_history()
+        
         if hist_prices:
             for price in hist_prices:
                 dt_object = datetime.utcfromtimestamp(price[0] / 1000)
@@ -49,4 +52,8 @@ class Get_history:
                     close=price[4],
                     volume=price[5]
                 )
-                ohlcv.save()
+                self.session.add(ohlcv)
+            self.session.flush()
+            self.session.commit()
+        self.session.close()
+
