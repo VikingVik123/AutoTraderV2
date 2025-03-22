@@ -9,7 +9,7 @@
     "symbol": "BTCUSDT",
     
     "telegram": {
-        "token": "7332365891:AAH8JITVcgx9M5tPZWC62iGObRBaEbX_OmE",
-        "chatId": "1285226554"
+        "token": "your-token",
+        "chatId": "your-chat-id"
     }
 }
