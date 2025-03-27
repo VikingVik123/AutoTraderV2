@@ -47,3 +47,4 @@ class Technical_Indicators:
         self.data["sma50"] = pta.sma(self.data["close"], length=50)
         self.data["hvi"] = self.hvi(self.data, period=10)
         return self.data
+    

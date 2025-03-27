@@ -72,6 +72,32 @@ class SimAccount:
         self.balance += price * amount
         self.trades.append(order)
         return order
+    
+    def close_trade(self):
+        """
+        close any open trade
+        """
+        if not self.trades:
+            return {"error": "No open trades to close"}
+        
+        trade = self.trades.pop()
+        price = float(self.get_latest_price())
+        profit = (price - trade["price"]) * trade["quantity"]
+        
+        if trade["side"] == "LONG":
+            self.balance += price * trade["quantity"] + profit
+        else:
+            self.balance -= price * trade["quantity"] + profit
+        
+        return {
+            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
+            "symbol": symbol,
+            "side": trade["side"],
+            "type": "MARKET",
+            "quantity": trade["quantity"],
+            "price": price,
+            "profit": profit,
+        }
 
     def save_trades(self, filename="trade_log.json"):
         """Logs trades to a JSON file."""

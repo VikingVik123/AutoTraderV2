@@ -56,6 +56,7 @@ class TradingEngine:
         positions = self.account.trades
         return {"balance": balance, "open_positions": positions}
 
+
 # Example usage:
 if __name__ == "__main__":
     engine = TradingEngine()

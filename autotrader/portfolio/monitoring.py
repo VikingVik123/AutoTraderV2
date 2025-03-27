@@ -46,12 +46,14 @@ class MonitorTrades(SimAccount):
     def positions(self):
         positions = "Open Positions (Simulated):\n"
         for order in self.trades:
-            positions += f"Symbol: {order['symbol']}, Side: {order[']side']}, Amount: {order['quantity']}, Price: {order['price']}\n"
+            positions += f"Symbol: {order['symbol']}, Side: {order['side']}, Amount: {order['quantity']}, Price: {order['price']}\n"
         return positions if self.trades else "No open positions (Simulated)."
 
 """
 if __name__ == "__main__":
     monitor = MonitorTrades()
-    #monitor.long_order()
+    monitor.long_order()
+    print(monitor.live_trade())
+    print(monitor.close_trade())
     print(monitor.positions())
 """

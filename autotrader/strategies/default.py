@@ -8,6 +8,8 @@ class DefaultStrategy:
     def __init__(self):
         self.data = Price2DataFrame().to_dataframe()
         self.indicators = Technical_Indicators()
+        self.data = self.indicators.get_indicators()
+        self.data["signal"] = 0
 
     def long_signal(self):
         """
@@ -16,7 +18,8 @@ class DefaultStrategy:
         self.data.loc[
             (self.data["close"] > self.data["ema50"]) &
             (self.data["close"] > self.data["sma200"]) &
-            (self.data["ema50"] > self.data["sma200"])
+            (self.data["ema50"] > self.data["sma200"]) 
+            #(self.data["hvi"] > 100)
         , "signal"] = 1
         return self.data
     
@@ -28,6 +31,8 @@ class DefaultStrategy:
             (self.data["close"] < self.data["ema50"]) &
             (self.data["close"] < self.data["sma200"]) &
             (self.data["ema50"] < self.data["sma200"])
+            #(self.data["hvi"] > 100)
         , "signal"] = -1
         return self.data
+
 
