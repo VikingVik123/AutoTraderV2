@@ -1,25 +1,25 @@
+import os
+import json
 from autotrader.data.get_history import Get_history
 from autotrader.dataframes.data import Price2DataFrame
 from autotrader.strategies.default import DefaultStrategy
 from autotrader.indicators.technical import Technical_Indicators
+from autotrader.portfolio.monitoring import MonitorTrades
+from autotrader.portfolio.account import SimAccount
+from autotrader.engines.simengine import TradingEngine
+from autotrader.telegram.tele import TeleComm
 
-def main():
-    # Get historical data
-    price2df = Price2DataFrame()
-    df = price2df.to_dataframe()
-    #print(df)
 
-    # Apply technical indicators FIRST
-    indicators = Technical_Indicators()
-    df = indicators.get_indicators()  # This ensures 'ema50' and others exist
-    #print(df.head())  # Check if ema50 is present
+config_path = os.path.join(os.path.dirname(__file__), ".", "config.json")
 
-    # Run default strategy
-    strategy = DefaultStrategy()
-    strategy.data = df  # Assign DataFrame with indicators
-    strategy.long_signal()
-    strategy.short_signal()
-    print(strategy.data)
+with open(config_path, "r") as f:
+    config = json.load(f)
 
-if __name__ == "__main__":
-    main()
+token = config["telegram"]["token"]
+chat_id = config["telegram"]["chatId"]
+
+if __name__ == "main":
+    #tele = TeleComm(token, chat_id)
+    #tele.run()
+    engine = TradingEngine()
+    engine.run(interval=60)

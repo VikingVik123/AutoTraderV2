@@ -68,7 +68,6 @@ class SimAccount:
             "price": price,
         }
         
-        # Simulate earnings from short position (simplified model)
         self.balance += price * amount
         self.trades.append(order)
         return order
@@ -105,13 +104,3 @@ class SimAccount:
             json.dump(self.trades, f, indent=4)
  
 
-"""
-sim_account = SimAccount()
-order_response = sim_account.long_order()
-print(order_response)
-print("New balance:", sim_account.get_balance())
-sell_order = sim_account.short_order()
-print(sell_order)
-print("New balance:", sim_account.get_balance())
-print(sim_account.trades)
-"""

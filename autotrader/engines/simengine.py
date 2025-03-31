@@ -19,11 +19,12 @@ class TradingEngine:
         self.history = Get_history()
         self.fetch_price = Fetch_price()
     
-    def run(self, interval=10):
+    def run(self, interval=60):
         """Continuously checks for trading signals and executes trades."""
         while True:
             self.refresh_data()
             self.execute_trades()
+            self.monitor_trades()
             time.sleep(interval)
     
     def refresh_data(self):
@@ -49,6 +50,18 @@ class TradingEngine:
             print(f"Short Order Executed: {order}")
         else:
             print("No trade signal detected.")
+
+    def monitor_trades(self):
+        """Monitor the performance of open trades."""
+        roi = self.account.roi()
+        live_trade = self.account.live_trade()
+        while live_trade is True:
+            if roi >= 0.3:
+                self.account.close_trade()
+            else:
+                continue
+                
+        return {"roi": roi, "live_trade": live_trade}
     
     def get_trading_summary(self):
         """Returns the current balance and open positions."""
@@ -57,7 +70,3 @@ class TradingEngine:
         return {"balance": balance, "open_positions": positions}
 
 
-# Example usage:
-if __name__ == "__main__":
-    engine = TradingEngine()
-    engine.run(interval=60)
