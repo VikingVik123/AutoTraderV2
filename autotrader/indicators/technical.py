@@ -47,4 +47,13 @@ class Technical_Indicators:
         self.data["sma50"] = pta.sma(self.data["close"], length=50)
         self.data["hvi"] = self.hvi(self.data, period=10)
         return self.data
-    
+
+"""    
+if __name__ == "__main__":
+    ti = Technical_Indicators()
+    print(ti.data.head())
+    print(ti.data.tail())
+    df = ti.get_indicators()
+    print(df.head())
+    print(df.tail())
+"""

@@ -1,51 +1,59 @@
 from autotrader.portfolio.account import SimAccount
 from datetime import datetime
+from autotrader.dataframes.data import Price2DataFrame
 
-class MonitorTrades(SimAccount):
-    def __init__(self):
-        super().__init__()
+class MonitorTrades:
+    def __init__(self, account: SimAccount):
+        self.account = account
 
     def roi(self):
-        """Calculate ROI (Return on Investment) for open trades."""
-        if not self.trades:
+        if not self.account.trade_history:
             return {"error": "No trades available to calculate ROI"}
 
-        total_investment = sum(trade["quantity"] * trade["price"] for trade in self.trades)
-        current_value = sum(trade["quantity"] * self.get_latest_price() for trade in self.trades)
+        total_investment = sum(t["quantity"] * t["entry_price"] for t in self.account.trade_history)
+        current_value = sum(t["quantity"] * t["exit_price"] for t in self.account.trade_history)
 
         if total_investment == 0:
             return {"error": "No valid investment to calculate ROI"}
 
         roi_percentage = ((current_value - total_investment) / total_investment) * 100
         return {"ROI (%)": round(roi_percentage, 2)}
-    
+
     def live_trade(self):
-        """Show the performance of an open trade."""
-        if not self.trades:
-            return {"error": "No active trades"}
-        
+        if not self.account.open_position:
+            return {"error": "No active trade"}
+        df = Price2DataFrame().to_dataframe()
+        self.account.update_dataframe(df)
         current_time = datetime.utcnow()
-        latest_trade = self.trades[-1]
-        trade_time = datetime.strptime(latest_trade["timestamp"], "%Y-%m-%d %H:%M:%S")
+        trade_time = datetime.strptime(self.account.open_position["timestamp"], "%Y-%m-%d %H:%M:%S")
         trade_duration = current_time - trade_time
-        latest_price = self.get_latest_price()
-        profit_loss = (latest_price - latest_trade["price"]) * latest_trade["quantity"]
+        latest_price = self.account.get_latest_price()
+        entry_price = self.account.open_position["entry_price"]
+        quantity = self.account.open_position["quantity"]
+        side = self.account.open_position["side"]
+
+        if side == "LONG":
+            profit_loss = (latest_price - entry_price) * quantity
+        else:
+            profit_loss = (entry_price - latest_price) * quantity
 
         status = {
             "trade_duration": str(trade_duration),
-            "symbol": latest_trade["symbol"],
-            "side": latest_trade["side"],
-            "price": latest_trade["price"],
-            "quantity": latest_trade["quantity"],
+            "symbol": self.account.open_position["symbol"],
+            "side": side,
+            "entry_price": entry_price,
+            "quantity": quantity,
             "current_price": latest_price,
             "profit/loss": round(profit_loss, 2),
-            "roi": self.roi(),
+            "unrealized_pnl": self.account.unrealized_pnl(),
         }
         return status
-    
-    def positions(self):
-        positions = "Open Positions (Simulated):\n"
-        for order in self.trades:
-            positions += f"Symbol: {order['symbol']}, Side: {order['side']}, Amount: {order['quantity']}, Price: {order['price']}\n"
-        return positions if self.trades else "No open positions (Simulated)."
 
+    def positions(self):
+        if not self.account.trade_history:
+            return "No open positions (Simulated)."
+
+        positions = "Open Positions (Simulated):\n"
+        for order in self.account.trade_history:
+            positions += f"Symbol: {order['symbol']}, Side: {order['side']}, Amount: {order['quantity']}, Price: {order['entry_price']}\n"
+        return positions

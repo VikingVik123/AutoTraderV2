@@ -26,6 +26,7 @@ class Fetch_price:
         gets price from exchange
         """
         prices = self.exchange.fetch_ohlcv(symbol, timeframe, limit=1)
+        print(prices)
         return prices
     
     def save(self):

@@ -1,6 +1,8 @@
 import pandas as pd
 from autotrader.db.database import SessionLocal
 from autotrader.models.symbol import Symbol  # ✅ Import Symbol model
+from autotrader.data.fetch import Fetch_price  # ✅ Import Fetch_price class
+import time
 
 class Price2DataFrame:
     def __init__(self):
@@ -8,6 +10,7 @@ class Price2DataFrame:
         session = SessionLocal()
         self.prices = session.query(Symbol).all()  # ✅ Specify table
         session.close()  # ✅ Close session after fetching data
+        
 
     def to_dataframe(self):
         """
@@ -26,3 +29,19 @@ class Price2DataFrame:
         }
         return pd.DataFrame(data)
 
+    #def test(self):
+        """
+        #Test the Price2DataFrame class.
+        """
+    #    while True:
+    #        fetch = Fetch_price()
+    #        fetch.save()
+    #        price_df = Price2DataFrame().to_dataframe()
+    #        print(price_df)
+    #        time.sleep(60)
+            
+"""
+if __name__ == "__main__":
+    price = Price2DataFrame()
+    print(price.to_dataframe())
+"""

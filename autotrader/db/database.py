@@ -21,7 +21,7 @@ class Database:
 
     def create_tables(self):
         """Create tables based on ORM models"""
-        from autotrader.models.symbol import Symbol
+        import autotrader.models.symbol
         Base.metadata.create_all(self.engine)
 
 # Create an instance of Database
