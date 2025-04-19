@@ -61,7 +61,12 @@ class TradingEngine:
             print(f"Error: {live_trade['error']}")
             return
 
-        if live_trade["profit/loss"] > 0.3:  # Example threshold for closing trade
+        entry = live_trade["entry_price"]
+        roi = (live_trade["current_price"] - entry) / entry
+        if live_trade["side"] == "SHORT":
+            roi *= -1
+
+        if roi >= 0.03 or roi <= -0.02:  # Take profit or stop loss
             close_trade = self.account.close_trade()
             print(f"Position closed with PnL: {close_trade['pnl']}")
         else:

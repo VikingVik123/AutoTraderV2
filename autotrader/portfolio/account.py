@@ -72,7 +72,7 @@ class SimAccount:
             "entry_price": price,
         }
 
-        self.balance += price * qty
+        self.balance -= price * qty  # Reserve margin for the short
         return {"status": "Short position opened", **self.open_position}
 
     def close_trade(self):
@@ -89,7 +89,7 @@ class SimAccount:
             self.balance += price * qty
         else:
             pnl = (entry - price) * qty
-            self.balance -= price * qty
+            self.balance += entry * qty + pnl  # Return margin + PnL
 
         trade_record = {
             "symbol": pos["symbol"],
@@ -105,6 +105,7 @@ class SimAccount:
         self.open_position = None
 
         return {"status": "Position closed", **trade_record}
+
 
     def unrealized_pnl(self):
         if not self.open_position:
